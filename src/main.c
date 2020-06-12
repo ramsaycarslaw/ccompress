@@ -6,6 +6,7 @@
 
 #include "../include/util.h"
 #include "../include/hash.h"
+#include "../include/dict.h"
 
 static dict *hashtab[HASHSIZE]; 
 
@@ -25,18 +26,13 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        //printf("%s\n", source);
-
         dict *d;
-        dict *found;
+        char * compressed = dictionary_compression(source, d, hashtab);
 
-        d = install("name", 1, hashtab);
-
-        found = lookup("name", hashtab);
-
-        printf("%s\n", found->key);
+        printf("%s\n", compressed);
 
         // control of source mem handed to main by read_ascii_file
+        free(compressed);
         free(source);
     }
 

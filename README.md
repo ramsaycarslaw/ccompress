@@ -1,6 +1,6 @@
 # C Compress
 
-C Compress is the C implementation of [gocompress](www.github.com/ramsaycarslaw/gocompress).
+C Compress is the C implementation of [gocompress](https://github.com/ramsaycarslaw/gocompress).
 
 ## Usage
 

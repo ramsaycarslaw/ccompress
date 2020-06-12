@@ -31,6 +31,8 @@ int main(int argc, char **argv)
 
         printf("%s\n", compressed);
 
+        int ok = write_ascii_file(compressed, "test/file.txt.cmp");
+
         // control of source mem handed to main by read_ascii_file
         free(compressed);
         free(source);

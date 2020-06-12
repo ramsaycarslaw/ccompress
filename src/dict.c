@@ -1,36 +1,37 @@
+// Copyright (C) 2020 Ramsay Carslaw
+
 #include "../include/dict.h"
 
 char *dictionary_compression(char *src, dict *d, dict *hashtab[HASHSIZE]) 
 {
-    char **tokens;
-    char* result = malloc(sizeof(char) * DEST_SIZE);
+    char *result = malloc(sizeof(char) * DEST_SIZE);
+    char *token, *str, *tofree;
+    int i = 0;
 
-    tokens = split_str(src, ' '); // need to fix split string
+    // own src's memory
+    tofree = str = strdup(src); 
 
-    if (!tokens)
+    while ((token = strsep(&str, " ")))
     {
-        printf("ERROR: Could not split source string...\n");
-        return NULL;
+        d = install(token, i, hashtab);
+
+        i++;
     }
-    int i;
-    int j;
 
-    for (i = 0; *(tokens + i); i++)
+    tofree = str = strdup(src); 
+
+    while ((token = strsep(&str, " ")))
     {
-        d = install(*(tokens + i), i, hashtab);
-    }
-    
-    for (j = 0; *(tokens + j); j++)
-    {
-        d = lookup(*(tokens + j), hashtab);
+        d = lookup(token, hashtab);
         int length = snprintf(NULL, 0, "%d", d->val);
         char *tmp = malloc(length + 1);
-        snprintf(tmp, length, "%d", d->val);
-
+        snprintf(tmp, length + 1, "%d", d->val);
         strcat(result, tmp);
         strcat(result, " ");
 
         free(tmp);
     }
+
+    free(tofree);
     return result;
 }

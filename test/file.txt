@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../include/util.h"
+
+int main(int argc, char **argv) 
+{
+    if (argc <3)
+    {
+        printf("ERROR: too many arguments...\n");
+        return 1;
+    }
+
+    if (strcmp(argv[1], "compress") == 0) 
+    {
+        char* source = read_ascii_file(argv[2]);
+        if (source == NULL) 
+        {
+            return 1;
+        }
+
+        printf("%s\n", source);
+
+        int ok = write_ascii_file(source, "test/file.txt");
+        if (ok == -1) 
+        {
+            return 1;
+        }
+
+        // control of source mem handed to main by read_ascii_file
+        free(source);
+    }
+
+    return 0;
+}

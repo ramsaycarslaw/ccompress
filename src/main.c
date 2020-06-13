@@ -10,8 +10,6 @@
 #include "../include/licence.h"
 #include "../include/user.h"
 
-static dict *hashtab[HASHSIZE]; 
-
 int main(int argc, char **argv) 
 {
     if (argc < 3)
@@ -28,21 +26,13 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        dict *d;
-        char * compressed = dictionary_compression(source, d, hashtab);
+        ht_t *hashtable = ht_create();
+        char * compressed = dictionary_compression(hashtable, source);
 
-        //printf("%s\n", compressed);
+        printf("%s\n", compressed);
 
         int ok = write_ascii_file(compressed, "test/file.txt.cmp");
 
-        char *decompressed = read_ascii_file("test/file.txt.cmp");
-
-        char *result = dictionary_decompression(decompressed, d, hashtab);
-
-        printf("%s\n", result);
-
-        // control of source mem handed to main by read_ascii_file
-        free(result);
         free(compressed);
         free(source);
 
@@ -50,18 +40,6 @@ int main(int argc, char **argv)
     {
         licence(argv[2]);
         
-    } else if (strcmp(argv[1], "decompress") == 0)
-    {
-        dict *d;
-
-        d = lookup_by_val(202, hashtab);
-        //char *decompressed = read_ascii_file(argv[2]);
-
-        //char *result = dictionary_decompression(decompressed, d, hashtab);
-
-        //printf("%s\n", result);
-        //free(result);
-    }
-
+    } 
     return 0;
 }

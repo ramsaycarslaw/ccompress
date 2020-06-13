@@ -1,36 +1,37 @@
 // Copyright (C) 2020 Ramsay Carslaw
 
-#ifndef CCOMPRESS_DICT_H
-#define CCOMPRESS_DICT_H
+#ifndef CCOMPRESS_HASH_H
+#define CCOMPRESS_HASH_H
 
-/*** Includes ***/
-
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*** Defines ***/
+#define TABLE_SIZE 20000
 
-// prime for hashing algorithm
-#define HASHSIZE 101
-
-/*** Structs ***/
-
-// new type like go's map or python's dictionary
-typedef struct dict {
-    struct dict *next;
+typedef struct entry_t {
     char *key;
-    int val;
-} dict;
+    char *value;
+    struct entry_t *next;
+} entry_t;
 
-/*** Functions ***/
+typedef struct {
+    entry_t **entries;
+} ht_t;
 
-unsigned hash(char *s);
+unsigned int hash(const char *key);
 
-dict *lookup(char *s, dict *hashtab[HASHSIZE]);
+entry_t *ht_pair(const char *key, const char *value);
 
-dict *lookup_by_val(int val, dict *hashtab[HASHSIZE]);
+ht_t *ht_create(void);
 
-dict *install(char *key, int val, dict *hashtab[HASHSIZE]);
+void ht_set(ht_t *hashtable, const char *key, const char *value);
 
-#endif // CCOMPRESS_DICT_H
+char *ht_get(ht_t *hashtable, const char *key);
+
+void ht_del(ht_t *hashtable, const char *key);
+
+void ht_dump(ht_t *hashtable);
+
+#endif // CCOMPRESS_HASH_H

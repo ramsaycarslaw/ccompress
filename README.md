@@ -4,7 +4,7 @@ C Compress is the C implementation of [gocompress](https://github.com/ramsaycars
 
 ## Usage
 
-C Compress can be called as such:
+C Compress can be called from the UNIX command line as such:
 
 ```
 ./ccompress compress path/to/file.txt
@@ -24,6 +24,7 @@ git clone www.github.com/ramsacarslaw/ccompress
 followed by
 
 ```
+cd ccompress
 make
 ```
 

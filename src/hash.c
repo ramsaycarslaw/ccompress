@@ -32,6 +32,28 @@ dict *lookup(char *s, dict *hashtab[HASHSIZE])
     return NULL;
 }
 
+dict *lookup_by_val(int val, dict *hashtab[HASHSIZE])
+{
+    dict *d = hashtab[0];
+    int i;
+
+    for (i = 0; i < HASHSIZE; i++)
+    {
+        
+        d = hashtab[i];
+        if (d == NULL)
+        {
+            continue;
+        }
+
+        if (d->val == val)
+        {
+            return d;
+        }
+    }
+    return NULL;
+}
+
 dict *install(char *key, int val, dict *hashtab[HASHSIZE])
 {
     dict *d;

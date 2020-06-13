@@ -29,6 +29,8 @@ unsigned hash(char *s);
 
 dict *lookup(char *s, dict *hashtab[HASHSIZE]);
 
+dict *lookup_by_val(int val, dict *hashtab[HASHSIZE]);
+
 dict *install(char *key, int val, dict *hashtab[HASHSIZE]);
 
 #endif // CCOMPRESS_DICT_H

@@ -1,36 +1,178 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+The short answer is that to run the program, no matter what your directory, you need to have the program's directory in your search path. The problem can be solved by putting the program into a folder thats already in that path, or by adding a new folder to the path - either will work. The best answer depends on:
 
-#include "../include/util.h"
+Is this program a downloaded program that you have compiled yourself from source?
 
-int main(int argc, char **argv) 
-{
-    if (argc <3)
-    {
-        printf("ERROR: too many arguments...\n");
-        return 1;
-    }
+Its quite likely will have an install mechanism already. In the folder that you compiled the program, as root, run 'make install'
 
-    if (strcmp(argv[1], "compress") == 0) 
-    {
-        char* source = read_ascii_file(argv[2]);
-        if (source == NULL) 
-        {
-            return 1;
-        }
+Is this program a downloaded program that you want to make available as part of the standard programs on the computer?
 
-        printf("%s\n", source);
+Makes sense to put this kind of application into a standard folder. its quite common to use directories such as /usr/local/bin for such programs. You will need root access to do this.
 
-        int ok = write_ascii_file(source, "test/file.txt");
-        if (ok == -1) 
-        {
-            return 1;
-        }
+This is a program that you have written for yourself and/or you have no special privilages on the computer.
 
-        // control of source mem handed to main by read_ascii_file
-        free(source);
-    }
+Creating a folder in your home directory called 'bin', and placing the program in there. You may need to edit your login script to add the full path to this folder (e.g. /usr/home/jeremy/bin)
 
-    return 0;
-}
+Whilst you could just add its current directory to the search path, you will have to keep doing this with every new program - and is more work in the longer term.
+
+share  improve this answer  follow 
+answered Nov 7 '10 at 19:28
+
+Michael Shaw
+55833 silver badges44 bronze badges
+add a comment
+
+17
+
+Placing a link to the file in the /bin directory isn't the best thing to do for multiple reasons.
+
+If the actual executable file is in a location that some users can't see or execute, they see it as a bad link or dysfunctional program.
+The /bin directory is supposed to be reserved for programs which are required for running the system (things like chmod, mkdir, etc).
+You can actually place (install) the executable file in /usr/bin/ or even /usr/local/bin/. Of course, you've manually installed the program at that point; your distribution isn't going to keep track of it the way it does the rest of your programs - you'll have to manually upgrade it when necessary and manually remove it if you want it gone. Also, you'll have to know what packages it depends on (it sounds like you already use the program, so that's taken care of, but in general...).
+
+Unless I'm setting up a program that I expect other users to use, that's not what I usually do: I create a bin directory just for me in my home directory, and I edit my shell profile to add ~/bin/ to my PATH environment variable. I find it easier to keep track of the programs I've installed that way, because it is separated from the rest of the system.
+
+share  improve this answer  follow 
+edited Nov 7 '10 at 20:02
+
+xenoterracide
+46.7k5959 gold badges166166 silver badges231231 bronze badges
+answered Nov 6 '10 at 23:19
+
+Shawn J. Goff
+38k2020 gold badges121121 silver badges137137 bronze badges
+add a comment
+
+6
+
+If you want to run a command foo in the directory your shell is currently in, you basically have two options:
+
+Type ./foo at the shell prompt.
+
+Add the . directory (. is a name for "the current directory") to the PATH environment variable; how you do this depends on the shell you are using:
+
+for Bourne-type shells (bash, zsh, ksh, etc.) you write (see this page for more information):
+
+export PATH=$PATH:.
+for csh-type shells (tcsh, csh) you write (see this page for more information):
+
+set path = ( $path .)
+Note that 2. is a security risk on multi-user systems: imagine you cd to directory /tmp and a malicious user has created a malware binary named ls in there..
+
+share  improve this answer  follow 
+answered Nov 6 '10 at 12:46
+
+Riccardo Murri
+14.3k33 gold badges5050 silver badges4646 bronze badges
+2
+yeah, i think options show you that unix let's you do things, that is considered bad practise. Adding . to your path can also create other side effects that are generally bad. – The Unix Janitor Nov 6 '10 at 13:58
+add a comment
+
+1
+
+Messing with the PATH opens you up to running malicious programs by mistake. Standard is to install "local" stuff under /usr/local (see FHS, which codifies Unix usage: a bit dated but it gives rationale)., /usr/local/bin is usually in the PATH for all users.
+
+My "locally installed" programs are in $HOME/bin, set in the standard dance by ./configure --prefix=$HOME ..., coupled with a few (bash) aliases to pick out e.g. self-built git over the system one (non-clashing ones are found in the PATH at the very end.
+
+share  improve this answer  follow 
+answered Jan 17 '16 at 17:23
+
+vonbrand
+16.2k22 gold badges2929 silver badges5252 bronze badges
+add a comment
+Highly active question. Earn 10 reputation in order to answer this question. The reputation requirement helps protect this question from spam and non-answer activity.
+Not the answer you're looking for? Browse other questions tagged command-line or ask your own question.
+The Overflow Blog
+The rise of the DevOps mindset
+Steps Stack Overflow is taking to help fight racism
+Featured on Meta
+We're switching to CommonMark
+New post lock available on meta sites: Policy Lock
+Linked
+7
+adding programs to path
+0
+add directory to shell profile
+2
+How can I add my program to system program list (Ubuntu 14.04)?
+0
+How to get command line flags or options in an executable command program
+1
+Automating pipes?
+0
+How must (Not how can) a program be available from everywhere in CentOS/Fedora
+Related
+17
+Make program first read from pipe, then from keyboard
+0
+How can I get sublime text to run from the command line?
+1
+What are the differences between creating a directory inside /home and /home/$USER directories?
+0
+How must (Not how can) a program be available from everywhere in CentOS/Fedora
+0
+Create a symbolic link in the current directory
+2
+cd out of deleted folder
+2
+Can't create a file through symbolic link
+0
+run a software with input file as symbolic link
+Hot Network Questions
+Is there anything about photons and/or space-time that would allow the detection of an energy-based attack from a distance of ten light seconds?
+Does it take two weeks for a single man to produce enough sperm to impregnant every fertile woman on Earth?
+Is it bad etiquette to keep playing in a clearly hopeless position?
+Did I miss EU customs on a flight from Brazil with stopover in Portugal to Germany?
+Why does Voldemort hug Draco Malfoy?
+Fitting 1 speed tyres on 21 speed bike
+Is Venus in some way tidally locked to... Earth?
+If someone can sing a melody, why can they not also recognize the intervals within that melody?
+How can I make a command that makes all my wolves sit and stand?
+How can I limit the application of resurrecting spells?
+How to analyze the space group of a relaxed structure that has fractional site occupancies
+Is there a relationship between the word amor (love) & mors (death)?
+Trying to move away from arrow keys in normal/insert/visual mode, but small text inserts are killing me!
+Does it make sense to say that something is almost infinite? If yes, then why?
+Do airport border officials know which flight you came on?
+Do +1 magic items affect each one of multiple dice rolled for damage?
+How can a player effectively use Booming Blade in combat?
+Is it a coincidence that words ending in -ooch in English tend to be colloquial? If not, why?
+Where are token creatures created from?
+Did Thomas Pearne do anything other than contradict Granville Sharp?
+What do you call a person who suggested something? A suggester?
+Print the SARS-Cov-2 (COVID-19) genome
+Employee asking for 2 weeks unpaid leave for travel quarantine
+How would a higher-dimensional being enter a lower dimension?
+ Question feed
+
+UNIX & LINUX
+Tour
+Help
+Chat
+Contact
+Feedback
+Mobile
+Disable Responsiveness
+COMPANY
+Stack Overflow
+Stack Overflow Business
+Developer Jobs
+About
+Press
+Legal
+Privacy Policy
+STACK EXCHANGE
+NETWORK
+Technology
+Life / Arts
+Culture / Recreation
+Science
+Other
+Blog
+Facebook
+Twitter
+LinkedIn
+Instagram
+site design / logo © 2020 Stack Exchange Inc; user contributions licensed under cc by-sa. rev 2020.6.12.37048
+
+Linux is a registered trademark of Linus Torvalds. UNIX is a registered trademark of The Open Group.
+This site is not affiliated with Linus Torvalds or The Open Group in any wa

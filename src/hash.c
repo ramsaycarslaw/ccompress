@@ -111,6 +111,39 @@ char *ht_get(ht_t *hashtable, const char *key) {
     return NULL;
 }
 
+char *ht_get_key(ht_t *hashtable, const char *value)
+{
+    for (int i = 0; i < TABLE_SIZE; ++i) 
+    {
+        entry_t *entry = hashtable->entries[i];
+
+        if (entry == NULL) 
+        {
+            continue;
+        }
+
+        if (strcmp(entry->value, value) == 0)
+        {
+            return entry->key;
+        }
+
+        for(;;) {
+            if (strcmp(entry->value, value) == 0)
+            {
+                return entry->key;
+            }
+
+            if (entry->next == NULL) 
+            {
+                break;
+            }
+
+            entry = entry->next;
+        }
+    }
+    return NULL;
+}
+
 void ht_del(ht_t *hashtable, const char *key) {
     unsigned int bucket = hash(key);
 

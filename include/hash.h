@@ -30,6 +30,8 @@ void ht_set(ht_t *hashtable, const char *key, const char *value);
 
 char *ht_get(ht_t *hashtable, const char *key);
 
+char *ht_get_key(ht_t *hashtable, const char *value);
+
 void ht_del(ht_t *hashtable, const char *key);
 
 void ht_dump(ht_t *hashtable);
